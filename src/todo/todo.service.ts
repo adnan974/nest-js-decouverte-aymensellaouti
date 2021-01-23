@@ -1,17 +1,40 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { CreateTodoDto } from "src/dto/createTodo.dto";
+import { UpdateTodoDto } from "src/dto/updateTodo.dto";
 import { Todo } from "src/entities/todo.entity";
-import { Repository } from "typeorm";
+import { TodoRepository } from "src/repository/todo.repository";
 
 @Injectable()
 export class TodoService{
     constructor(
-        @InjectRepository(Todo)
-        private todoRepository:Repository<Todo>
+        @InjectRepository(TodoRepository)
+        private todoRepository: TodoRepository
     ){}
 
-    createTodo(){
-        this.todoRepository.save({id:1,description:'test'})
+    async getTodoById(id):Promise<Todo>{
+        return await this.todoRepository.findOne(id)
+    }
+
+    async createTodo(newTodo:CreateTodoDto):Promise<Todo>{
+        return await this.todoRepository.save(newTodo);
+    }
+
+    async deleteTodoById(id:number):Promise<void>{
+        await this.todoRepository.delete(id);
+    }
+
+    async getAllTodos():Promise<Todo[]>{
+        return await this.todoRepository.find();
+    }
+
+    // Todo renvoyer l'objet updated
+    async updateTodo(updatedTodo:UpdateTodoDto){
+        let todoToUpdate = await this.todoRepository.findOne(updatedTodo.id)
+        todoToUpdate.description = updatedTodo.description ? updatedTodo.description:todoToUpdate.description
+        return await this.todoRepository.update(todoToUpdate.id,todoToUpdate)
+
+
     }
 
 }

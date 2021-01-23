@@ -1,28 +1,40 @@
-import { Controller, Delete, Get, Post, Param, Put } from '@nestjs/common';
+import { Controller, Delete, Get, Post, Param, Put, Body } from '@nestjs/common';
+import { CreateTodoDto } from 'src/dto/createTodo.dto';
+import { UpdateTodoDto } from 'src/dto/updateTodo.dto';
+import { Todo } from 'src/entities/todo.entity';
 import { TodoService } from './todo.service';
 
 @Controller('todo')
 export class TodoController {
   constructor(private todoService:TodoService) {}
 
-  @Get('hello')
-  getHello(): string {
-    return "hello world";
+
+  @Get('getall')
+  getAllTodos():Promise<Todo[]>{
+    return this.todoService.getAllTodos();
   }
 
-  @Delete('delete/:id')
-  deleteTodo(@Param('id') id:string):string{
-      return "delete ok "+id
-  }
-
-  @Put('update/:id')
-  updateTodo(@Param('id') id:string){
-      return "update ok"+ id
+  @Get('get/:id')
+  getTodo(@Param('id')id :number):Promise<Todo>{
+    return this.todoService.getTodoById(id);
   }
 
   @Post('create')
-  createTodo(){
-    this.todoService.createTodo()
+  createTodo(@Body()newTodo :CreateTodoDto) {
+    return this.todoService.createTodo(newTodo)
   }
+
+  @Delete('delete/:id')
+  deleteTodo(@Param('id') id:number):void{
+       this.todoService.deleteTodoById(id)
+  }
+
+  @Put('update')
+  updateTodo(@Body() updatedTodoDto:UpdateTodoDto){
+    return this.todoService.updateTodo(updatedTodoDto)
+  }
+
+  
+
 
 }
