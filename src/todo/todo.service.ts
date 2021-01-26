@@ -28,11 +28,11 @@ export class TodoService{
         return await this.todoRepository.find();
     }
 
-    // Todo renvoyer l'objet updated
-    async updateTodo(updatedTodo:UpdateTodoDto){
+    async updateTodo(updatedTodo:UpdateTodoDto):Promise<Todo>{
         let todoToUpdate = await this.todoRepository.findOne(updatedTodo.id)
         todoToUpdate.description = updatedTodo.description ? updatedTodo.description:todoToUpdate.description
-        return await this.todoRepository.update(todoToUpdate.id,todoToUpdate)
+        await this.todoRepository.update(todoToUpdate.id,todoToUpdate)
+        return todoToUpdate
 
 
     }
