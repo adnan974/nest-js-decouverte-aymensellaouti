@@ -36,5 +36,13 @@ export class TodoService{
 
 
     }
+    
+    async softDeleteTodoById(id){
+        this.todoRepository.softDelete(id);
+    }
+
+    async recoverTodo(id){
+        this.todoRepository.restore(id);
+    }
 
 }

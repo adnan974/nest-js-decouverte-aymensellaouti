@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn } from 'typeorm';
 
 @Entity()
 export class Todo{
@@ -8,6 +8,9 @@ export class Todo{
 
     @Column()
     description:string;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 
 
 }
